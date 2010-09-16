@@ -46,6 +46,7 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+//git test
 public class TaxiMain extends MapActivity implements IDirectionsListener {
 	LinearLayout linearLayout;
 	MapView mapView;
