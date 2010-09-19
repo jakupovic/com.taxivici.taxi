@@ -2,24 +2,21 @@ package com.venitaxi.taxi;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,9 +39,9 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.venitaxi.taxi.Preferences;
 
 //git test
 public class TaxiMain extends MapActivity implements IDirectionsListener {
@@ -53,7 +50,33 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	MapController mapController;
 	GeoPoint currentLocation;
 	TaxiItemizedOverlay itemizedoverlay;
+	public static final String PREFS_NAME = "MyPrefsFile";
+	public static String userName;
+	public boolean CheckboxPreference;
+    public static String ListPreference;
+    public static String ringtonePreference;
+    public static String taxiUpdateServer;
+    public static String updateNow;
+    public static String homeAddress;
+    public static SharedPreferences customSharedPreference;
 
+    private void getPrefs() {
+            // Get the xml/preferences.xml preferences
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext()); 
+            /*
+           SharedPreferences customSharedPreference = getSharedPreferences( "taxiCustomPreferences", MODE_PRIVATE);
+           SharedPreferences.Editor editor = customSharedPreference.edit();
+           */
+            CheckboxPreference = prefs.getBoolean("checkboxPref", true);
+            ListPreference = prefs.getString("listStateAvailability", "0");
+            userName = prefs.getString("userName", "XXXX");
+            homeAddress = prefs.getString("homeAddress", "");
+            taxiUpdateServer = prefs.getString("taxiUpdateServer", "http://taxivici.com");
+            // Get the custom preference
+            SharedPreferences mySharedPreferences = getSharedPreferences(
+                            "taxiCustomPreferences", MODE_PRIVATE);
+            updateNow = mySharedPreferences.getString("updateNow", "");
+    }
 
 	public void setDirections(GeoPoint start, GeoPoint end) {
 		DrivingDirections.Mode mode = Mode.DRIVING; // or Mode.WALKING
@@ -61,12 +84,17 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			.createDrivingDirections();
 		directions.driveTo(start, end, mode, TaxiMain.this);
 	}
-
+/*
+	@Override
+	public void onStart() {
+		getPrefs();
+		
+	}
+	*/
 	@Override
 		public void onCreate(Bundle savedInstanceState) {
-
-
 			super.onCreate(savedInstanceState);
+			customSharedPreference = getSharedPreferences( "taxiCustomPreferences", MODE_PRIVATE);
 			// setContentView(R.layout.main);
 			setContentView(R.layout.main);
 			final Button button = (Button) findViewById(R.id.button);
@@ -76,17 +104,17 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 
 					// GeoPoint point = new GeoPoint(19240000,-99120000);
 					if(currentLocation != null) {
-					Toast.makeText(TaxiMain.this, "current location",
-						Toast.LENGTH_SHORT).show();
-					OverlayItem overlayitem = new OverlayItem(currentLocation,
-						"Hola, Mundo!", "I'm in Mexico City!");
-
-					itemizedoverlay.addOverlay(overlayitem);
-					mapController.animateTo(currentLocation);
-					mapController.setZoom(16);
-					mapView.invalidate();
+						Toast.makeText(TaxiMain.this, "current location",
+							Toast.LENGTH_SHORT).show();
+						OverlayItem overlayitem = new OverlayItem(currentLocation,
+							"Hola, Mundo!", "I'm in Mexico City!");
+	
+						itemizedoverlay.addOverlay(overlayitem);
+						mapController.animateTo(currentLocation);
+						mapController.setZoom(16);
+						mapView.invalidate();
 					} else {
-					Toast.makeText(TaxiMain.this, "current location not available, make sure your gps is on", Toast.LENGTH_SHORT).show();
+						Toast.makeText(TaxiMain.this, "current location not available, make sure your gps is on", Toast.LENGTH_SHORT).show();
 					}
 
 					}
@@ -141,55 +169,65 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				@Override
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// If the event is a key-down event on the "enter" button
-				if ((event.getAction() == KeyEvent.ACTION_DOWN)
-					&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
-				Geocoder geoCoder = new Geocoder(getBaseContext(), Locale
-					.getDefault());
-				try {
-				List<Address> addresses = geoCoder.getFromLocationName(
-					edittext.getText().toString(), 5);
-				if (addresses.size() > 0) {
-				GeoPoint p = new GeoPoint((int) (addresses.get(0)
-						.getLatitude() * 1E6), (int) (addresses
-						.get(0).getLongitude() * 1E6));
-				// hide the keyboard
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(edittext
-					.getWindowToken(), 0);
-
-				// Toast.makeText(TaxiMain.this, "going to: '" +
-				// edittext.getText(), Toast.LENGTH_SHORT).show();
-				mapController.animateTo(p);
-
-				OverlayItem overlayitem = new OverlayItem(p,
-						"Destination", "Hi there.");
-				itemizedoverlay.addOverlay(overlayitem);
-				setDirections(currentLocation, p);
-				mapView.invalidate();
-				return true;
-				} else {
-					Toast.makeText(
-							TaxiMain.this,
-							"address: '" + edittext.getText()
-							+ "' not found, please try again",
-							Toast.LENGTH_SHORT).show();
+				if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) { 
+					try {
+						Geocoder geoCoder = new Geocoder(getBaseContext(), Locale .getDefault()); 
+						List<Address> addresses = geoCoder.getFromLocationName(
+							edittext.getText().toString(), 5);
+						if (addresses.size() > 0) {
+							GeoPoint p = new GeoPoint((int) (addresses.get(0)
+									.getLatitude() * 1E6), (int) (addresses
+									.get(0).getLongitude() * 1E6));
+							// hide the keyboard
+							InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+							imm.hideSoftInputFromWindow(edittext .getWindowToken(), 0);
+							
+							mapController.animateTo(p);
+							
+							/* add the marker for destination */
+							OverlayItem overlayitem = new OverlayItem(p, "Destination", "Hi there.");
+							itemizedoverlay.addOverlay(overlayitem);
+							/* add the marker for current location */
+							OverlayItem currentLocationItem = new OverlayItem(currentLocation, "Current Location", "Click me");
+							itemizedoverlay.addOverlay(currentLocationItem);
+							
+							// draw the path between current location and destination
+							setDirections(currentLocation, p);
+							
+							mapView.invalidate();
+							return true;
+						} else {
+							Toast.makeText(
+									TaxiMain.this,
+									"address: '" + edittext.getText()
+									+ "' not found, please try again",
+									Toast.LENGTH_SHORT).show();
+							return true;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					return true;
-				}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return true;
 				}
 				return false;
 				}
-
 			});
+			// Register the listener with the Location Manager to receive location // updates 
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20, 100, locationListener); 
+	}
+	@Override
+    protected void onStop(){
+       super.onStop();
 
-			// Register the listener with the Location Manager to receive location
-			// updates
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-					20, 0, locationListener);
-		}
+      // We need an Editor object to make preference changes.
+      // All objects are from android.context.Context
+      SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+      SharedPreferences.Editor editor = settings.edit();
+      editor.putString("silentMode", userName);
+
+      // Commit the edits!
+      editor.commit();
+    }
 
 	@Override
 	protected boolean isRouteDisplayed() {
@@ -208,14 +246,11 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	 * Downtown to Sea-Tax Airport: $32.00
 	 */
 	public double calculateFare(double distance, double minutes) {
-
 		double fare = 2.50; // initial fare
-
 		if (distance > 1) {
 			fare += (distance - 1) * 2.0;
 		}
 		fare += minutes * 0.5; // is this right?
-
 		return fare;
 	}
 
@@ -259,27 +294,46 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		/*Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
-		  try {
-		  List<Address> addresses = geoCoder.getFromLocationName("1806 8th ave, 91810", 5);
-		  if (addresses.size() > 0) {
-		 */
-		GeoPoint p = new GeoPoint((int) (47.61390 * 1E6), (int) (-122.33406 * 1E6));
-		if(p != null && currentLocation != null) {
-			Toast.makeText(TaxiMain.this, "go home", Toast.LENGTH_SHORT).show();
-			OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
-			itemizedoverlay.addOverlay(overlayitem);
-			setDirections(currentLocation, p);
-			mapView.invalidate();
-
-		} else {
-			Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, try again later", Toast.LENGTH_SHORT).show();
-		}
-		/*
-		   } 
-		   } catch(Exception e) {
-		   }
-		 */
-		return super.onOptionsItemSelected(item);
+		Toast.makeText(TaxiMain.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+		String title = item.getTitle().toString();
+		/*try {*/
+			if(title.equals("home")) {
+                homeAddress = customSharedPreference.getString("homeAddress", null);
+                GeoPoint p = null;
+                if(homeAddress != null) {
+					Geocoder geoCoder = new Geocoder(getBaseContext(), Locale .getDefault()); 
+					List<Address> addresses;
+					try {
+						addresses = geoCoder.getFromLocationName( homeAddress, 5);
+						if (addresses.size() > 0) {
+							p = new GeoPoint((int) (addresses.get(0)
+									.getLatitude() * 1E6), (int) (addresses
+									.get(0).getLongitude() * 1E6));
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+						Toast.makeText(TaxiMain.this, "cannot find address: " + homeAddress, Toast.LENGTH_SHORT).show();
+					} 
+                }
+				if(p != null && currentLocation != null) {
+					OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
+					itemizedoverlay.addOverlay(overlayitem);
+					setDirections(currentLocation, p);
+					mapView.invalidate();
+				} else {
+					Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, try again later", Toast.LENGTH_SHORT).show();
+				}
+			} else if(title.equals("preferences")) { 
+				Intent myIntent = new Intent();
+				myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
+				myIntent.setPackage("com.venitaxi.taxi");
+				startActivity(myIntent);
+				/*
+				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+				startActivity(myIntent);
+				Toast.makeText(TaxiMain.this, "Hello person", Toast.LENGTH_SHORT).show();
+				*/
+			}
+	   return super.onOptionsItemSelected(item);
 	}
 }
