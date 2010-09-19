@@ -1,9 +1,14 @@
 package com.venitaxi.taxi;
 
 import java.io.IOException;
-
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +19,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.format.Time;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +46,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.venitaxi.taxi.Preferences;
 
 //git test
 public class TaxiMain extends MapActivity implements IDirectionsListener {
@@ -59,6 +63,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
     public static String updateNow;
     public static String homeAddress;
     public static SharedPreferences customSharedPreference;
+    public static Updater locationUpdater;
 
     private void getPrefs() {
             // Get the xml/preferences.xml preferences
@@ -108,7 +113,6 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 							Toast.LENGTH_SHORT).show();
 						OverlayItem overlayitem = new OverlayItem(currentLocation,
 							"Hola, Mundo!", "I'm in Mexico City!");
-	
 						itemizedoverlay.addOverlay(overlayitem);
 						mapController.animateTo(currentLocation);
 						mapController.setZoom(16);
@@ -214,6 +218,8 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			});
 			// Register the listener with the Location Manager to receive location // updates 
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20, 100, locationListener); 
+			String taxiUpdateServer = customSharedPreference.getString("taxiUpdateServer", "taxivici.com");
+			locationUpdater = new Updater(taxiUpdateServer);
 	}
 	@Override
     protected void onStop(){
@@ -333,6 +339,17 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				startActivity(myIntent);
 				Toast.makeText(TaxiMain.this, "Hello person", Toast.LENGTH_SHORT).show();
 				*/
+			} else if(title.equals("update")) { 
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
+                String userName = customSharedPreference.getString("userName", null);
+                String availability = customSharedPreference.getString("listStateAvailability", null);
+				nameValuePairs.add(new BasicNameValuePair("name", userName));  
+				nameValuePairs.add(new BasicNameValuePair("state", availability)); 
+				String timeStamp = Long.toString(Calendar.getInstance().getTimeInMillis()/1000);
+				nameValuePairs.add(new BasicNameValuePair("timestamp", timeStamp));  
+				int responseCode = locationUpdater.updateLocation(currentLocation, nameValuePairs);
+				
+				Toast.makeText(TaxiMain.this, "update response code: " + responseCode + ", server: " + locationUpdater.updateServer, Toast.LENGTH_SHORT).show();
 			}
 	   return super.onOptionsItemSelected(item);
 	}

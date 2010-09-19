@@ -6,4 +6,7 @@
     <item android:id="@+id/preferences"
           android:icon="@drawable/person"
           android:title="preferences" />
+    <item android:id="@+id/update"
+          android:icon="@drawable/person"
+          android:title="update" />
 </menu>
