@@ -310,7 +310,6 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 					mapController.animateTo(currentLocation);
 					mapController.setZoom(16);
 					mapView.invalidate();
-					updateLocation();
 			}
 	   return super.onOptionsItemSelected(item);
 	}
