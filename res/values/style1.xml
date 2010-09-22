@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="base" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="base.label">
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:layout_gravity">left</item>
+    </style>
+    <style name="base.label.taxi">
+        <item name="android:textSize">40sp</item>
+    </style>
+    <style name="base.label.value">
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="tblRow" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

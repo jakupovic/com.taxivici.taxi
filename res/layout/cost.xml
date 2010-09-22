@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/mainlayout" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TableLayout android:layout_below="@+id/textViewTime"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:id="@+id/TableLayout01">
+		
+		<TableRow android:id="@+id/tableRowTimeLabel" style="@style/base">
+		<TextView android:text="Time" android:id="@+id/textViewTimeLabel" style="@style/base.label" />
+		</TableRow>
+		<TableRow android:id="@+id/TableRow03" style="@style/base">
+			<TextView android:text="Fare" android:id="@+id/textViewFareLabel" style="@style/base.label"/>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow02" style="@style/base">
+			<TextView android:text="Distance" android:id="@+id/textViewDistanceLabel" style="@style/base.label"/>
+		</TableRow>
+		
+	</TableLayout>
+	<TableLayout android:layout_toRightOf="@+id/TableLayout01"
+		android:layout_below="@+id/tableRowTime" style="@style/base" android:id="@+id/TableLayout02">
+		<TableRow android:id="@+id/TableRow01" style="@style/tblRow">
+			<TextView android:text="@+id/TextView03" android:id="@+id/textViewTime" style="@style/base.label.value"/>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow04" style="@style/tblRow">
+			<TextView android:text="@+id/TextView04" android:id="@+id/textViewFare" style="@style/base.label.value"/>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow04" style="@style/tblRow">
+			<TextView android:text="@+id/TextView04" android:id="@+id/textViewDistance" style="@style/base.label.value"/>
+		</TableRow>
+	</TableLayout>
+	<View android:id="@+id/ruleLine1" android:layout_toRightOf="@+id/TableLayout03" android:layout_below="@+id/TableLayout01" android:layout_width="fill_parent" android:layout_height="2dip" android:background="#FF00FF00" />
+	<TableLayout android:layout_toRightOf="@+id/TableLayout03" android:layout_below="@+id/ruleLine1" style="@style/base" android:id="@+id/TableLayout03">
+		<TableRow android:id="@+id/TableRow04" style="@style/tblRow">
+			<TextView android:text="Call Limousine" android:id="@+id/textEastSideForHire" style="@style/base.label.taxi"/>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow01" style="@style/tblRow">
+			<TextView android:text="Call Yellow Cab" android:id="@+id/textYelloCab" style="@style/base.label.taxi"/>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow04" style="@style/tblRow">
+			<TextView android:text="Call Orange Cab" android:id="@+id/textOrangeCab" style="@style/base.label.taxi"/>
+		</TableRow>
+	</TableLayout>
+
+</RelativeLayout>

@@ -18,17 +18,26 @@
 		        android:name=".Preferences"
 		        android:label="@string/set_preferences">
 		</activity>
+		<activity
+		        android:name=".Cost"
+		        android:label="Cost">
+		</activity>
     </application>
     <uses-sdk android:minSdkVersion="8" />
     <intent-filter>
-    <action android:name="android.intent.action.VIEW" />
-    <category android:name="android.intent.category.DEFAULT" />
-    <service android:name="http" />
-    <service android:name="https" />
-    <service android:name="file" />
-</intent-filter> 
-<intent-filter> 
-    <action android:name="com.venitaxi.taxi.Preferences" />
-	<category android:name="android.intent.category.DEFAULT" />
-</intent-filter> 
+	    <action android:name="android.intent.action.VIEW" />
+	    <category android:name="android.intent.category.DEFAULT" />
+	    <service android:name="http" />
+	    <service android:name="https" />
+	    <service android:name="file" />
+	    <service android:name="tel" />
+    </intent-filter> 
+	<intent-filter> 
+	    <action android:name="com.venitaxi.taxi.Preferences" />
+		<category android:name="android.intent.category.DEFAULT" />
+	</intent-filter> 
+	<intent-filter> 
+	    <action android:name="com.venitaxi.taxi.Cost" />
+		<category android:name="android.intent.category.DEFAULT" />
+	</intent-filter> 
 </manifest> 

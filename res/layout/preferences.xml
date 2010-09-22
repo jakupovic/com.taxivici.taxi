@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
-                android:title="Preferences">
-                <CheckBoxPreference
-                        android:title="Update Server"
-                        android:defaultValue="false"
-                        android:summary="Send location data."
-                        android:key="checkboxPref" />
-        </PreferenceCategory>
-        <PreferenceCategory
                 android:title="Settings">
         <EditTextPreference
                 android:name="Username"
@@ -17,8 +9,8 @@
                 android:title="Set username"
                 android:key="userName" />
         <ListPreference
-                        android:title="State"
-                        android:summary="Select state"
+                        android:title="Status"
+                        android:summary="Select status"
                         android:key="listStateAvailability"
                         android:defaultValue="Available"
                         android:entries="@array/listStates"
@@ -29,7 +21,21 @@
                 android:defaultValue=""
                 android:title="Set Home Address"
                 android:key="homeAddress" />
-        <PreferenceScreen
+ 
+        <Preference
+                android:title="Update now"
+                android:summary="Update the server with current location"
+                android:key="updateNow" />
+        </PreferenceCategory>
+        <PreferenceCategory
+                android:title="Preferences">
+                <CheckBoxPreference
+                        android:title="Update Server"
+                        android:defaultValue="false"
+                        android:summary="Send location data."
+                        android:key="checkboxPref" />
+        </PreferenceCategory>
+               <PreferenceScreen
                 android:key="AdvancedPreferences"
                 android:title="Advanced Preferences"
                 android:summary="Advanced Preferences">
@@ -40,9 +46,34 @@
                         android:defaultValue="http://taxivici.com/update"
                         android:key="taxiUpdateServer" />
         </PreferenceScreen>
-        <Preference
-                android:title="Update now"
-                android:summary="Update the server with current location"
-                android:key="updateNow" />
-        </PreferenceCategory>
+                <PreferenceScreen
+                android:key="TaxiFarePreferences"
+                android:title="Fare Preferences"
+                android:summary="Fare Preferences">
+                <EditTextPreference
+                        android:name="Meter drop"
+                        android:summary="Meter drop"
+                        android:title="Meter Drop"
+                        android:defaultValue="2.50"
+                        android:key="taxiMeterDropCost" />
+                <EditTextPreference
+                        android:name="Cost per unit distance"
+                        android:summary="Cost per unit distance"
+                        android:title="Cost per unit distance"
+                        android:defaultValue="2.00"
+                        android:key="taxiUnitDistanceCost" />
+                <EditTextPreference
+                        android:name="Cost of 1 minute wait"
+                        android:summary="Cost of 1 minute wait"
+                        android:title="Cost of 1 minute wait"
+                        android:defaultValue="0.50"
+                        android:key="taxiMinuteWaitCost" />   
+                <EditTextPreference
+                        android:name="Additional passenger charge"
+                        android:summary="Additional passenger charge"
+                        android:title="Additional passenger charge"
+                        android:defaultValue="0.50"
+                        android:key="taxiAdditionalPassengerCost" />
+        </PreferenceScreen>
+        
 </PreferenceScreen>
