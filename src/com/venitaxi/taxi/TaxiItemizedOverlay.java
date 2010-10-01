@@ -2,22 +2,15 @@ package com.venitaxi.taxi;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.amelie.driving.Route;
 import com.amelie.driving.DrivingDirections.Mode;
-import com.amelie.driving.impl.RouteImpl;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
@@ -37,7 +30,12 @@ public class TaxiItemizedOverlay extends ItemizedOverlay {
 	
 	public void addOverlay(OverlayItem overlay) {
 	    mOverlays.add(overlay);
-	    populate();
+	    /* FIXME: figure out why this fails when called initially */
+	    try {
+	    	populate();
+	    } catch (Exception e)  {
+	    	
+	    }
 	}
 	
 	@Override

@@ -90,6 +90,9 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			List<Overlay> mapOverlays = mapView.getOverlays();
 			Drawable drawable = TaxiMain.this.getResources().getDrawable( R.drawable.ltblu_pushpin);
 			itemizedoverlay = new TaxiItemizedOverlay(drawable);
+			GeoPoint p = new GeoPoint(0, 0);
+			OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
+			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
 
 			// Acquire a reference to the system Location Manager
@@ -304,12 +307,16 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				Toast.makeText(TaxiMain.this, "Hello person", Toast.LENGTH_SHORT).show();
 				*/
 			} else if(title.equals("here")) { 
-					Toast.makeText(TaxiMain.this, "current location", Toast.LENGTH_SHORT).show();
-					OverlayItem overlayitem = new OverlayItem(currentLocation, "Hola, Mundo!", "I'm in Mexico City!");
-					itemizedoverlay.addOverlay(overlayitem);
-					mapController.animateTo(currentLocation);
-					mapController.setZoom(16);
-					mapView.invalidate();
+					if(currentLocation != null) {
+						Toast.makeText(TaxiMain.this, "current location", Toast.LENGTH_SHORT).show();
+						OverlayItem overlayitem = new OverlayItem(currentLocation, "Hola, Mundo!", "I'm in Mexico City!");
+						itemizedoverlay.addOverlay(overlayitem);
+						mapController.animateTo(currentLocation);
+						mapController.setZoom(16);
+						mapView.invalidate();
+					} else {
+						Toast.makeText(TaxiMain.this, "cannot find current location", Toast.LENGTH_SHORT).show();
+					}
 			}
 	   return super.onOptionsItemSelected(item);
 	}

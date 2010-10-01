@@ -9,4 +9,66 @@
    <item>1</item>
    <item>0</item>
 </string-array>
+	<string-array name="listCities">
+		<item>Atlanta</item>   
+		<item>Baltimore</item> 
+		<item>Boston</item>    
+		<item>Chicago</item>   
+		<item>Cleveland</item> 
+		<item>Dallas</item>    
+		<item>Denver</item>    
+		<item>Detroit</item>   
+		<item>Honolulu</item>  
+		<item>Houston</item>   
+		<item>KansasCity</item>
+		<item>LasVegas</item>  
+		<item>LosAngeles</item>
+		<item>Miami</item>     
+		<item>Milwaukee</item> 
+		<item>Minneapolis</item>
+		<item>NewYork</item>   
+		<item>Orlando</item>   
+		<item>Philadelphia</item>
+		<item>Phoenix</item>   
+		<item>Pittsburgh</item>
+		<item>Portland</item>  
+		<item>SaltLakeCity</item>
+		<item>SanDiego</item>  
+		<item>SanFrancisco</item>
+		<item>Seattle</item>   
+		<item>St.Louis</item>  
+		<item>Washington</item>
+		<item>Other</item>
+	</string-array>
+	<string-array name="listCitiesValues">
+		<item>{"wait_time_charge":"21.00","add_charge_per_mile":"2","5_mile_trip":"12.55","charge_per_increment":"0.25","city":"Atlanta","meter_drop":"2.5","add_increments_miles":"0.125","initial_increment_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"1.8","wait_time_charge":"24.00","5_mile_trip":"11","charge_per_increment":"0.23","cabs":{"BaltimoreTaxi":"4103277777","YellowCab":"4106851212"},"city":"Baltimore","meter_drop":"2","initial_increment_miles":"1","add_increments_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"2.4","wait_time_charge":"24.00","5_mile_trip":"14.2","charge_per_increment":"0.3","cabs":{"Independent":"6174268700","MetroCab":"6177825500","BostonCab":"6175365010","BayStateTaxi":"6175665000","SoBostonTaxi":"6172694444","CityCab":"6175365100","ITOA":"6178254000","HelloTaxi":"6177341111","TownTaxi":"6175365000","CheckerCab":"6175367000"},"city":"Boston","meter_drop":"2.25","initial_increment_miles":"0.125","add_increments_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"1.8","wait_time_charge":"0.00","5_mile_trip":"8.8","charge_per_increment":"0.2","cabs":{"American":"UnitedTaxi7732487600","YellowCab":"3128294222","AmericanTaxi":"8472559600","CheckerCab":"3122432537","FlashCab":"7735611444"},"city":"Chicago","meter_drop":"2.25","initial_increment_miles":"0.111","add_increments_miles":"0.111"}</item>
+		<item>{"add_charge_per_mile":"2","wait_time_charge":"18.00","5_mile_trip":"12.75","charge_per_increment":"0.5","cabs":{"UnitedTaxi":"2163989000","YellowCab":"2166231550","AceTaxi":"2163614700","Americab":"2168811111","SouthwestCabs":"4402373100"},"city":"Cleveland","meter_drop":"2.25","initial_increment_miles":"0.125","add_increments_miles":"0.25"}</item>
+		<item>{"add_charge_per_mile":"1.8","wait_time_charge":"18.00","5_mile_trip":"10.3","charge_per_increment":"0.2","cabs":{"TaxiDallas":"4692222222","YellowCab":"8004446400"},"city":"Dallas","meter_drop":"2.25","initial_increment_miles":"0.111","add_increments_miles":"0.111"}</item>
+		<item>{"add_charge_per_mile":"2.25","wait_time_charge":"22.50","5_mile_trip":"14","charge_per_increment":"0.25","cabs":{"":"","BigSkyShuttle":"3033002626","MetroTaxi":"3033333333","YellowCab":"3037777777","FreedomCab":"3034444444"},"city":"Denver","meter_drop":"2.5","initial_increment_miles":"0.111","add_increments_miles":"0.111"}</item>
+		<item>{"add_charge_per_mile":"2.25","wait_time_charge":"24.00","5_mile_trip":"12.84","charge_per_increment":"0.28","cabs":{"Yellowcab":"3139613333","CheckerCab":"3139637000"},"city":"Detroit","meter_drop":"3","initial_increment_miles":"0.125","add_increments_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"2.4","wait_time_charge":"27.00","5_mile_trip":"15.2","charge_per_increment":"0.3","cabs":{"RobertsTaxi":"8084864609","AlohaStateCab":"8088473566","TopCatTaxi":"8085212225","TheCab":"8084222222","AlphaHawaiiTaxi":"8089231111","CharleysTaxi":"8085311333","StarTaxi":"8087391300","PonyCab":"8089448282","CityTaxi":"8085242121","SidaofHawail":"8088360011"},"city":"Honolulu","meter_drop":"2.25","initial_increment_miles":"0.125","add_increments_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"1.87","wait_time_charge":"20.00","5_mile_trip":"10.53","charge_per_increment":"0.17","cabs":{"LibertyCab":"7136956700","TomballTaxi":"2813518294","AmigosTaxi":"7134535540","TaxisFiesta":"7132252666","YellowCab":"7132361111","SquareDealCab":"7136595105"},"city":"Houston","meter_drop":"2.5","initial_increment_miles":"0.181818181818182","add_increments_miles":"0.0909090909090909"}</item>
+		<item>{"add_charge_per_mile":"2.1","wait_time_charge":"40.00","5_mile_trip":"14.25","charge_per_increment":"0.21","cabs":{"CityCab":"8164748294","YellowCab":"8164715000","CheckerCab":"8164444444","KCTaxi":"8164715000"},"city":"KansasCity","meter_drop":"2.5","initial_increment_miles":"0.1","add_increments_miles":"0.1"}</item>
+		<item>{"add_charge_per_mile":"2.4","wait_time_charge":"30.00","5_mile_trip":"14.78","charge_per_increment":"0.22","cabs":{"WhittleseaBlue":"7023846111","DesertCab":"7023869102","DeluxeTaxi":"7025670557","AceCab":"7027368383","YellowCab":"7028732000","WesternCab":"7027368000","NellisCab":"7022481111","HendersonTaxi":"7023842322","LuckyCab":"7024777555"},"city":"LasVegas","meter_drop":"3.3","initial_increment_miles":"0.0909090909090909","add_increments_miles":"0.0909090909090909"}</item>
+		<item>{"add_charge_per_mile":"2.45","wait_time_charge":"26.53","5_mile_trip":"15.69","charge_per_increment":"0.35","cabs":{"UnitedCheckerCab":"3108341121","BellCab":"8882355222","UnitedIndependentTaxi":"8004110303","CityCab":"8007504400","IndependentTaxi":"8005218294","BeverlyHillsCab":"8002736611","YellowCab":"8002001085","UnitedTaxiofSanFernandoValley":"8002905600","CheckerCab":"8003005007"},"city":"LosAngeles","meter_drop":"2.65","add_increments_miles":"0.14","initial_increment_miles":"0.14"}</item>
+		<item>{"add_charge_per_mile":"2.4","wait_time_charge":"24.00","5_mile_trip":"13.8","charge_per_increment":"0.4","cabs":{"Miami":"DadeTaxis3055511111","CentralCabs":"3055325555","CrownTaxis":"3054455555","SunshineCabs":"3054453333","FlamingoTaxis":"3055999999","SuperYellowCabs":"3058887777","YellowCabs":"3054444444"},"city":"Miami","meter_drop":"2.5","initial_increment_miles":"0.166666666666667","add_increments_miles":"0.166666666666667"}</item>
+		<item>{"add_charge_per_mile":"2","wait_time_charge":"15.00","5_mile_trip":"11.88","charge_per_increment":"0.25","cabs":{"YellowCab":"4142711800"},"city":"Milwaukee","meter_drop":"2.25","initial_increment_miles":"0.125","add_increments_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"2.35","wait_time_charge":"24.00","5_mile_trip":"13.57","charge_per_increment":"0.47","cabs":{"RainbowTaxi":"6123331615","YellowTaxi":"8008294222","GreenWhiteTaxiCo":"6125222222","SuburbanTaxi":"9528848888","GreenWhiteTaxi":"6512222222","RoadstarTaxi":"6125292100","AirportYellowTaxi":"6516443212","BlueWhiteTaxi":"6123333333","DiamondCab":"6516421188","AirportTownTaxi":"6127210000","CityWideCabCo":"6514891111","GoldStarTaxi":"9528814444","MinneapolisTaxi":"6129981555"},"city":"Minneapolis","meter_drop":"2.5","initial_increment_miles":"0.2","add_increments_miles":"0.2"}</item>
+		<item>{"wait_time_charge":"24.00","add_charge_per_mile":"2","5_mile_trip":"12.9","charge_per_increment":"0.4","city":"NewYork","meter_drop":"2.5","add_increments_miles":"0.2","initial_increment_miles":"0.2"}</item>
+		<item>{"add_charge_per_mile":"2.5","wait_time_charge":"22.50","5_mile_trip":"14.5","charge_per_increment":"2.5","cabs":{"AceMetroLuxuryCab":"4078551111","DiamondCab":"4075233333","StarTaxi":"4078579999","YellowCityCab":"4074222222"},"city":"Orlando","meter_drop":"3","initial_increment_miles":"1","add_increments_miles":"1"}</item>
+		<item>{"add_charge_per_mile":"2.3","wait_time_charge":"30.00","5_mile_trip":"12.49","charge_per_increment":"0.23","cabs":{"PhillyPHLTaxi":"2152322000","QuakerCityCab":"2157288000","OldeCityTaxi":"2153380838","AirportShuttle":"2159691818","UnitedCab":"2152389500","YellowCab":"2159228400"},"city":"Philadelphia","meter_drop":"2.7","initial_increment_miles":"0.14","add_increments_miles":"0.1"}</item>
+		<item>{"wait_time_charge":"19.80","add_charge_per_mile":"1.8","5_mile_trip":"11.5","charge_per_increment":"0.3","city":"Phoenix","meter_drop":"2.5","add_increments_miles":"0.166666666666667","initial_increment_miles":"1"}</item>
+		<item>{"add_charge_per_mile":"1.75","wait_time_charge":"9.00","5_mile_trip":"10","charge_per_increment":"0.25","cabs":{"Checker":"4123815600","Yellow":"4126658100","Eagle":"4127651555","Peoples":"4124415334"},"city":"Pittsburgh","meter_drop":"2.25","initial_increment_miles":"0.14","add_increments_miles":"0.14"}</item>
+		<item>{"add_charge_per_mile":"2.3","wait_time_charge":"15.00","5_mile_trip":"12.77","charge_per_increment":"0.23","cabs":{"GreenCab":"5032341414","NewRoseCity":"5032827707","BroadwayCab":"5032271234","PortlandTaxi":"5032565400","RadioCab":"5032271212"},"city":"Portland","meter_drop":"2.5","initial_increment_miles":"0.1","add_increments_miles":"0.1"}</item>
+		<item>{"wait_time_charge":"22.00","add_charge_per_mile":"1.5","5_mile_trip":"9.07","charge_per_increment":"0.19","city":"SaltLakeCity","meter_drop":"2","add_increments_miles":"0.125","initial_increment_miles":"0.125"}</item>
+		<item>{"add_charge_per_mile":"2.6","wait_time_charge":"20.00","5_mile_trip":"14.41","charge_per_increment":"0.26","cabs":{"IcoaTaxi":"6192256230","AmericanCab":"6192341111","SDTaxiServ":"6193426494","YellowCab":"6194444444","SanDiegoCab":"6192268294","SilverCab":"6192805555","OrangeCab":"6192235555"},"city":"SanDiego","meter_drop":"2.4","initial_increment_miles":"0.1","add_increments_miles":"0.1"}</item>
+		<item>{"add_charge_per_mile":"2.25","wait_time_charge":"27.00","5_mile_trip":"14.55","charge_per_increment":"0.45","cabs":{"GreenCab":"4156264733","LuxorCab":"4152824141","DeSotoCab":"4159701300","ArrowCab":"4156483181","MetroCab":"4159200700","YellowCab":"4153333333","VeteransCab":"4156484119"},"city":"SanFrancisco","meter_drop":"3.1","initial_increment_miles":"0.2","add_increments_miles":"0.2"}</item>
+		<item>{"add_charge_per_mile":"2","wait_time_charge":"30.00","5_mile_trip":"13.5","charge_per_increment":"0.2","cabs":{"GreenCab":"2065754040","RedtopCab":"2067894949","YellowCab":"2066226500","FarwestTaxi":"4254545055","OrangeCab":"2069054212","GraytopCab":"2066224800"},"city":"Seattle","meter_drop":"2.5","initial_increment_miles":"1","add_increments_miles":"0.1"}</item>
+		<item>{"wait_time_charge":"22.00","add_charge_per_mile":"1.7","5_mile_trip":"8.33","charge_per_increment":"0.17","city":"St.Louis","meter_drop":"2.5","add_increments_miles":"0.1","initial_increment_miles":"0.1"}</item>
+		<item>{"wait_time_charge":"15.00","add_charge_per_mile":"1.5","5_mile_trip":"9.25","charge_per_increment":"0.25","city":"Washington","meter_drop":"3","add_increments_miles":"0.166666666666667","initial_increment_miles":"0.166666666666667"}</item>
+		<item>{"add_charge_per_mile":"2.18","wait_time_charge":"30.00","5_mile_trip":"13.5","charge_per_increment":"0.2","cabs":{"GreenCab":"2065754040","RedtopCab":"2067894949","YellowCab":"2066226500","FarwestTaxi":"4254545055","OrangeCab":"2069054212","GraytopCab":"2066224800"},"city":"Other","meter_drop":"2.5","initial_increment_miles":"1","add_increments_miles":"0.1"}</item>
+	</string-array>
 </resources>

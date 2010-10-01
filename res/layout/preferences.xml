@@ -2,7 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
                 android:title="Settings">
-        <EditTextPreference
+            <ListPreference
+                android:title="City"
+                android:summary="Select City"
+                android:key="listCityLocale"
+                android:defaultValue="Seattle"
+                android:entries="@array/listCities"
+                android:entryValues="@array/listCitiesValues" />
+<!--        <EditTextPreference
                 android:name="Username"
                 android:summary="Username"
                 android:defaultValue=""
@@ -15,18 +22,11 @@
                         android:defaultValue="Available"
                         android:entries="@array/listStates"
                         android:entryValues="@array/listStateValues" />
-        <EditTextPreference
-                android:name="homeAddress"
-                android:summary="Address of your home"
-                android:defaultValue=""
-                android:title="Set Home Address"
-                android:key="homeAddress" />
  
         <Preference
                 android:title="Update now"
                 android:summary="Update the server with current location"
                 android:key="updateNow" />
-        </PreferenceCategory>
         <PreferenceCategory
                 android:title="Preferences">
                 <CheckBoxPreference
@@ -35,6 +35,21 @@
                         android:summary="Send location data."
                         android:key="checkboxPref" />
         </PreferenceCategory>
+                        -->
+        <EditTextPreference
+                android:name="homeAddress"
+                android:summary="Address of your home"
+                android:defaultValue=""
+                android:title="Set Home Address"
+                android:key="homeAddress" />
+        <EditTextPreference
+                android:name="myTaxi"
+                android:summary="Phone number for your favorite taxi"
+                android:defaultValue=""
+                android:title="Favorite Taxi"
+                android:key="myTaxi" />
+        </PreferenceCategory>
+        <!--
                <PreferenceScreen
                 android:key="AdvancedPreferences"
                 android:title="Advanced Preferences"
@@ -46,6 +61,7 @@
                         android:defaultValue="http://taxivici.com/update"
                         android:key="taxiUpdateServer" />
         </PreferenceScreen>
+          -->
                 <PreferenceScreen
                 android:key="TaxiFarePreferences"
                 android:title="Fare Preferences"
