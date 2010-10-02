@@ -3,12 +3,7 @@ package com.venitaxi.taxi;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +12,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-import com.google.android.maps.GeoPoint;
 import com.venitaxi.taxi.MyLocation.LocationResult;
  
 

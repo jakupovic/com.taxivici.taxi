@@ -49,18 +49,15 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	MapView mapView;
 	MapController mapController;
 	GeoPoint currentLocation;
+	Address currentAddress = null;
+	String currentAddressString = null;
 	TaxiItemizedOverlay itemizedoverlay;
-	public static final String PREFS_NAME = "MyPrefsFile";
-	public static String userName;
 	public boolean CheckboxPreference;
-    public static String ListPreference;
-    public static String ringtonePreference;
-    public static String taxiUpdateServer;
     public static String updateNow;
     public static String homeAddress;
     public static SharedPreferences customSharedPreference;
     public static Updater locationUpdater;
-	private Geocoder geoCoder;
+	public static Geocoder geoCoder;
 	
 	public LocationResult locationResult = new LocationResult() {
 	    @Override
@@ -69,6 +66,22 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			Double latitude = location.getLatitude() * 1E6;
 			Double longitude = location.getLongitude() * 1E6;
 			currentLocation = new GeoPoint(latitude.intValue(), longitude.intValue()); 
+			try {
+				List<Address> addresses = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
+            	//Toast.makeText(TaxiMain.this, "geocoding ...", Toast.LENGTH_SHORT).show();
+				if (addresses.size() > 0) {
+					currentAddress = addresses.get(0);
+					String address = "";
+					for(int i = 0; i < currentAddress.getMaxAddressLineIndex(); i++) {
+						address += " " + currentAddress.getAddressLine(i);
+					}
+					currentAddressString = address;
+					//Toast.makeText(TaxiMain.this, "got an address: " + address , Toast.LENGTH_SHORT).show();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	        };
 	 };
 
@@ -90,36 +103,16 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			List<Overlay> mapOverlays = mapView.getOverlays();
 			Drawable drawable = TaxiMain.this.getResources().getDrawable( R.drawable.ltblu_pushpin);
 			itemizedoverlay = new TaxiItemizedOverlay(drawable);
+			
+			/* FIXME: this is needed for some reason as if there are no markers on the layer it crashes :( */
 			GeoPoint p = new GeoPoint(0, 0);
 			OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
 			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
-
-			// Acquire a reference to the system Location Manager
-			/*
-			LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-			Location loc = locationManager.getLastKnownLocation(Context.LOCATION_SERVICE);
-			this.setCurrrentLocation(loc);
-
- 			// Define a listener that responds to location updates
-			// Called when a new location is found by the network location
-			// provider.
-			LocationListener locationListener = new LocationListener() {
-				public void onLocationChanged(Location location) {
-					Double latitude = location.getLatitude() * 1E6;
-					Double longitude = location.getLongitude() * 1E6;
-					currentLocation = new GeoPoint(latitude.intValue(), longitude.intValue()); 
-					// good stuff http://mobiforge.com/developing/story/using-google-maps-android
-				}
-				public void onStatusChanged(String provider, int status, Bundle extras) {}
-				public void onProviderEnabled(String provider) {}
-				public void onProviderDisabled(String provider) {}
-			};
-			// Register the listener with the Location Manager to receive location // updates 
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20, 100, locationListener); 
-			*/
 			
 			final EditText edittext = (EditText) findViewById(R.id.edittext);
+            String  homeAddress = customSharedPreference.getString("homeAddress", "");
+            edittext.setText(homeAddress);
 			edittext.setOnKeyListener(new OnKeyListener() {
 				@Override
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -135,15 +128,23 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				return false;
 				}
 			});
-			
+			/* disabled for now 
 			String taxiUpdateServer = customSharedPreference.getString("taxiUpdateServer", "taxivici.com");
 			locationUpdater = new Updater(taxiUpdateServer);
+			*/
+			/* setup screen FIXME */
+            String  cityLocale = customSharedPreference.getString("listCityLocale", "");
+            if(cityLocale.equals("")) {
+            	Toast.makeText(TaxiMain.this, "Please choose your city in Menu/Preferences, or select Other and then use Fare preferences to set taxi charges", Toast.LENGTH_LONG).show();
+            }
+            if(homeAddress.equals("")) {
+            	Toast.makeText(TaxiMain.this, "Please provide your home address in the Preferences menu item.", Toast.LENGTH_LONG).show();
+            }
 
 	}
 	
 	public void overlayRouteInformationFromAddress(String destinationAddress) {
 		try {
-			//Toast.makeText(TaxiMain.this, "looking for: " + destinationAddress, Toast.LENGTH_SHORT).show();
 			List<Address> addresses = geoCoder.getFromLocationName(destinationAddress, 5);
 			if (addresses.size() > 0) {
 				GeoPoint destination = new GeoPoint((int) (addresses.get(0)
@@ -154,8 +155,10 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				OverlayItem overlayitem = new OverlayItem(destination, "Destination", "Hi there.");
 				itemizedoverlay.addOverlay(overlayitem);
 				/* add the marker for current location */
+				/*
 				MyLocation myLocation = new MyLocation();
 				myLocation.getLocation(this, locationResult);
+				*/
 				OverlayItem currentLocationItem = new OverlayItem(currentLocation, "Current Location", "Click me");
 				itemizedoverlay.addOverlay(currentLocationItem);
 
@@ -167,7 +170,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				Toast.makeText(
 						TaxiMain.this,
 						"address: '" + destinationAddress
-						+ "' not found, please try again",
+						+ "' not found, please try again and maybe add city/state?",
 						Toast.LENGTH_SHORT).show();
 			}
 		} catch (IOException e) {
@@ -192,28 +195,6 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		return false;
 	}
 
-	/*
-	 * Approximate Metered Rates
-	 * 
-	 * $2.50 for the first 1 mile or less $2.00 for each additional mile $0.50
-	 * for wait time per minute $0.50 for each passenger above two.
-	 * 
-	 * Flat Rates
-	 * 
-	 * Downtown to Sea-Tax Airport: $32.00
-	 */
-	public static double calculateFare(double distance, double minutes) {
-        Double meterDrop = Double.valueOf(customSharedPreference.getString("taxiMeterDropCost", "2.50"));
-        Double taxiUnitDistanceCost = Double.valueOf(customSharedPreference.getString("taxiUnitDistanceCost", "2.00"));
-        Double taxiMinuteWaitCost = Double.valueOf(customSharedPreference.getString("taxiMinuteWaitCost", "0.50"));
-		double fare = meterDrop; 
-		if (distance > 1) {
-			fare += (distance - 1) * taxiUnitDistanceCost;
-		}
-		fare += minutes * taxiMinuteWaitCost; // is this right?
-		return fare;
-	}
-
 	@Override
 	public void onDirectionsAvailable(Route route, Mode mode) {
 		/* this should draw the route */
@@ -232,21 +213,17 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			}
 			/* FIXME: need to check what the returned values are if not 'mins' or 'miles' convert */
 
-			/*Toast.makeText(
-					TaxiMain.this,
-					"distance: " + distance + ", time: "
-					+ minutes + ", fare: $"
-					+ calculateFare(distance, minutes),
-					Toast.LENGTH_LONG).show();
-					*/
-			/* show the cost screen */
 			Intent myIntent = new Intent();
+			
+			//Toast.makeText(TaxiMain.this, "sending: " + currentAddressString , Toast.LENGTH_SHORT).show();
+			myIntent.putExtra("currentAddress", currentAddressString);
 			myIntent.putExtra("distance", distance);
 			myIntent.putExtra("minutes", minutes);
 			myIntent.putExtra("unitDistance", unitDistance);
 			myIntent.putExtra("unitTime", unitTime);
 			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Cost");
 			myIntent.setPackage("com.venitaxi.taxi");
+			/* show the cost screen */
 			startActivity(myIntent);
 		} catch(Exception e) {
 
@@ -256,7 +233,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	@Override
 	public void onDirectionsNotAvailable() {
 		// TODO Auto-generated method stub
-		Toast.makeText(TaxiMain.this, "directions NOT available", Toast.LENGTH_SHORT).show();
+		Toast.makeText(TaxiMain.this, "sorry cannot find your location, try adding city/state?", Toast.LENGTH_SHORT).show();
 
 	}
 	@Override
@@ -270,55 +247,49 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		String title = item.getTitle().toString();
-		/*try {*/
-			if(title.equals("go home")) {
-                homeAddress = customSharedPreference.getString("homeAddress", null);
-                GeoPoint p = null;
-                if(homeAddress != null) {
-					List<Address> addresses;
-					try {
-						addresses = geoCoder.getFromLocationName( homeAddress, 5);
-						if (addresses.size() > 0) {
-							p = new GeoPoint((int) (addresses.get(0)
-									.getLatitude() * 1E6), (int) (addresses
-									.get(0).getLongitude() * 1E6));
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-						Toast.makeText(TaxiMain.this, "cannot find address: " + homeAddress, Toast.LENGTH_SHORT).show();
-					} 
-                }
-				if(p != null && currentLocation != null) {
-					OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
+		if(title.equals("go home")) {
+            homeAddress = customSharedPreference.getString("homeAddress", null);
+            GeoPoint p = null;
+            if(homeAddress != null) {
+				List<Address> addresses;
+				try {
+					addresses = geoCoder.getFromLocationName( homeAddress, 5);
+					if (addresses.size() > 0) {
+						p = new GeoPoint((int) (addresses.get(0)
+								.getLatitude() * 1E6), (int) (addresses
+								.get(0).getLongitude() * 1E6));
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					Toast.makeText(TaxiMain.this, "cannot find: " + homeAddress + ", try being more specific, add city/state?", Toast.LENGTH_SHORT).show();
+				} 
+            }
+			if(p != null && currentLocation != null) {
+				OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
+				itemizedoverlay.addOverlay(overlayitem);
+				setDirections(currentLocation, p);
+				mapView.invalidate();
+			} else {
+				Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, is the GPS on?", Toast.LENGTH_SHORT).show();
+			}
+		} else if(title.equals("preferences")) { 
+			Intent myIntent = new Intent();
+			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
+			myIntent.setPackage("com.venitaxi.taxi");
+			startActivity(myIntent);
+		} else if(title.equals("here")) { 
+				if(currentLocation != null) {
+					Toast.makeText(TaxiMain.this, "You are here, or close to: " + currentAddressString, Toast.LENGTH_LONG).show();
+					OverlayItem overlayitem = new OverlayItem(currentLocation, "Hola, Mundo!", "I'm in Mexico City!");
 					itemizedoverlay.addOverlay(overlayitem);
-					setDirections(currentLocation, p);
+					mapController.animateTo(currentLocation);
+					mapController.setZoom(16);
 					mapView.invalidate();
 				} else {
-					Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, try again later", Toast.LENGTH_SHORT).show();
+					Toast.makeText(TaxiMain.this, "GPS is warming up, please try again ..", Toast.LENGTH_SHORT).show();
 				}
-			} else if(title.equals("preferences")) { 
-				Intent myIntent = new Intent();
-				myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
-				myIntent.setPackage("com.venitaxi.taxi");
-				startActivity(myIntent);
-				/*
-				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-				startActivity(myIntent);
-				Toast.makeText(TaxiMain.this, "Hello person", Toast.LENGTH_SHORT).show();
-				*/
-			} else if(title.equals("here")) { 
-					if(currentLocation != null) {
-						Toast.makeText(TaxiMain.this, "current location", Toast.LENGTH_SHORT).show();
-						OverlayItem overlayitem = new OverlayItem(currentLocation, "Hola, Mundo!", "I'm in Mexico City!");
-						itemizedoverlay.addOverlay(overlayitem);
-						mapController.animateTo(currentLocation);
-						mapController.setZoom(16);
-						mapView.invalidate();
-					} else {
-						Toast.makeText(TaxiMain.this, "cannot find current location", Toast.LENGTH_SHORT).show();
-					}
-			}
-	   return super.onOptionsItemSelected(item);
+		}
+   return super.onOptionsItemSelected(item);
 	}
 	public void updateLocation() {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  

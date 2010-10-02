@@ -10,8 +10,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
-		android:apiKey="00_yEsf_C069SuGwrRk-eCFtIuSdoI3SC4XTiVg"
+		android:apiKey="00_yEsf_C069hgQ10knouxA-AlztIiMOgHQyFOg"
     />
+    <!-- default key android:apiKey="00_yEsf_C069SuGwrRk-eCFtIuSdoI3SC4XTiVg" -->
  <Button 
  		android:id="@+id/button"
         android:layout_width="fill_parent"

@@ -98,16 +98,20 @@ public class Cost extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cost);
+        final SharedPreferences customSharedPreference = getSharedPreferences( "taxiCustomPreferences", MODE_PRIVATE);
 		
 		Double distance = null;
         Double minutes = null;
+	    JSONObject entries = null;
+		JSONObject cabs;
+	    int numEntries = 0;
+	    
         String unitDistance = getIntent().getStringExtra("unitDistance");
         String unitTime = getIntent().getStringExtra("unitTime");
         distance = getIntent().getDoubleExtra("distance", 0.0);
         minutes = getIntent().getDoubleExtra("minutes", 0.0);
+        String currentAddress = getIntent().getStringExtra("currentAddress");
         
-        final SharedPreferences customSharedPreference = getSharedPreferences( "taxiCustomPreferences", MODE_PRIVATE);
-        String city  = customSharedPreference.getString("listCityLocale", "Seattle");
         Double meterDrop = Double.valueOf(customSharedPreference.getString("taxiMeterDropCost", "2.50"));
         Double taxiUnitDistanceCost = Double.valueOf(customSharedPreference.getString("taxiUnitDistanceCost", "2.00"));
         Double taxiMinuteWaitCost = Double.valueOf(customSharedPreference.getString("taxiMinuteWaitCost", "0.50"));
@@ -119,69 +123,39 @@ public class Cost extends MapActivity {
 		fare += minutes * taxiMinuteWaitCost; // is this right?
 		Double tip = new Double(fare * 0.15);
 		Double total = tip + fare;
-	    JSONObject entries = null;
-	    int numEntries = 0;
-	    /*
-		try {
-			InputStream is = this.getResources().openRawResource(R.raw.cabdatajson);
-		    byte[] buffer;
-			buffer = new byte[is.available()];
-		    while (is.read(buffer) != -1);
-		    String jsontext = new String(buffer);
-		    entries = new JSONObject(jsontext);
-		    numEntries = entries.length();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		
-        String citySelected = customSharedPreference.getString("listCityLocale", "nothing");
-		//Toast.makeText(getBaseContext(), "pulled out: " + citySelected, Toast.LENGTH_LONG).show(); 
-		JSONObject cityData = getJSONObjectFromString(citySelected);
-		JSONObject cabs;
 		try {
+	        String citySelected = customSharedPreference.getString("listCityLocale", "nothing");
+			JSONObject cityData = getJSONObjectFromString(citySelected);
 			cabs = cityData.getJSONObject("cabs");
 			taxiCompanies = cabs.names();
 			phoneNumbers = cabs.toJSONArray(taxiCompanies);
 			numEntries = cabs.length();
+			labels = new String[ENTNUM + numEntries];
+			totals = new String[ENTNUM + numEntries];
+			labels[0] = "Fare:    ";
+			labels[1] = "Tip:      ";
+			labels[2] = "Total:   ";
+			labels[3] = "Call Favorite Taxi";
+			totals[0] = new DecimalFormat("$0.##").format((double)fare);
+			totals[1] = new DecimalFormat("$0.##").format((double)tip);
+			totals[2] = new DecimalFormat("$0.##").format((double)total);
+	        for(int i=0; taxiCompanies != null && i<taxiCompanies.length(); i++) {
+				labels[ENTNUM + i] = "Call " + taxiCompanies.getString(i);
+				totals[ENTNUM + i] = "";
+	        }
+	        // set the current address and destination info
+			TextView textView = (TextView) findViewById(R.id.TextView01);
+			textView.setText("Here: " + currentAddress);
+			TextView distTime = (TextView) findViewById(R.id.distTimeTextView);
+			distTime.setText("Info (est.): " + distance.toString() + " miles, " + minutes.toString() + " min(s)");
 		} catch (JSONException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
+		} catch (Exception e) {
+			// FIXME: should not catch all exceptions
+			e.printStackTrace();
 		}
-		//JSONArray cabCompanies = cabs.names();
-        //SharedPreferences.Editor editor = customSharedPreference.edit();
-		//editor.putString("taxiMeterDropCost", city.getString("meter_drop"));
-		labels = new String[ENTNUM + numEntries];
-		totals = new String[ENTNUM + numEntries];
-		labels[0] = "Fare:";
-		labels[1] = "Tip:";
-		labels[2] = "Total:";
-		labels[3] = "Call Favorite Taxi";
-		totals[0] = new DecimalFormat("$0.##").format((double)fare);
-		totals[1] = new DecimalFormat("$0.##").format((double)tip);
-		totals[2] = new DecimalFormat("$0.##").format((double)total);
-		/*
-        taxiCompanies = entries.names();
-		try {
-			phoneNumbers = entries.toJSONArray(taxiCompanies);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
-        for(int i=0; taxiCompanies != null && i<taxiCompanies.length(); i++)
-        {
-			try {
-				labels[ENTNUM + i] = "Call " + taxiCompanies.getString(i);
-				totals[ENTNUM + i] = "";
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
 
 		ListView l1 = (ListView) findViewById(R.id.ListView01);
 		l1.setOnItemClickListener(new OnItemClickListener() {
@@ -199,11 +173,16 @@ public class Cost extends MapActivity {
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} catch (Exception e) {
+						//FIXME: should not catch all exceptions
+						e.printStackTrace();
 					}
 				}
-				Intent myIntent;
-				myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
-				startActivity(myIntent);
+				if(phoneNumber != null) {
+					Intent myIntent;
+					myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
+					startActivity(myIntent);
+				}
 		}});
 		l1.setAdapter(new EfficientAdapter(this));
 	}
