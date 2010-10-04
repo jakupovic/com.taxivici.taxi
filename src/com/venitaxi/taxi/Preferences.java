@@ -53,9 +53,21 @@ public class Preferences extends PreferenceActivity {
 			//Toast.makeText(getBaseContext(), "pulled out: " + citySelected, Toast.LENGTH_LONG).show(); 
 			JSONObject city = getJSONFromString(citySelected);
 	        SharedPreferences.Editor editor = customSharedPreference.edit();
-			editor.putString("taxiMeterDropCost", city.getString("meter_drop"));
-	        editor.putString("taxiUnitDistanceCost", city.getString("charge_per_increment"));
-	        editor.putString("taxiMinuteWaitCost", String.valueOf(Double.parseDouble(city.getString("wait_time_charge"))/60.0));
+	        /*
+	        add_charge_per_mile
+	        add_increments_miles
+	        charge_per_increment
+	        city
+	        initial_increment_miles
+	        meter_drop
+	        wait_time_charge
+	        */
+			editor.putString("add_charge_per_mile", city.getString("add_charge_per_mile"));
+			editor.putString("add_increments_miles", city.getString("add_increments_miles"));
+	        editor.putString("charge_per_increment", city.getString("charge_per_increment"));
+			editor.putString("meter_drop", city.getString("meter_drop"));
+			editor.putString("initial_increment_miles", city.getString("initial_increment_miles"));
+	        editor.putString("wait_time_charge", String.valueOf(Double.parseDouble(city.getString("wait_time_charge"))/60.0));
 		    // Commit the edits!
 		    editor.commit();
 		} catch (JSONException e) {

@@ -75,7 +75,7 @@ public class Cost extends MapActivity {
 			TextView text2;
 		}
 	}
-	public JSONObject getJSONObjectFromString(String jsonString) {
+	public static JSONObject getJSONObjectFromString(String jsonString) {
 		JSONObject cities = null;
 		try {
 			InputStream is = new ByteArrayInputStream(jsonString.getBytes("UTF-8"));//this.getResources().openRawResource(R.raw.taxiratesjson);
@@ -102,26 +102,38 @@ public class Cost extends MapActivity {
 		
 		Double distance = null;
         Double minutes = null;
-	    JSONObject entries = null;
 		JSONObject cabs;
 	    int numEntries = 0;
 	    
-        String unitDistance = getIntent().getStringExtra("unitDistance");
-        String unitTime = getIntent().getStringExtra("unitTime");
-        distance = getIntent().getDoubleExtra("distance", 0.0);
-        minutes = getIntent().getDoubleExtra("minutes", 0.0);
-        String currentAddress = getIntent().getStringExtra("currentAddress");
+        distance = getIntent().getDoubleExtra("distanceValue", 0.0) /1609.0;
+        String distanceText = getIntent().getStringExtra("distanceText");
+        minutes = getIntent().getDoubleExtra("durationValue", 0.0) / 60.0;
+        String durationText = getIntent().getStringExtra("durationText");
+        String fromAddress = getIntent().getStringExtra("fromAddress");
+        String toAddress = getIntent().getStringExtra("toAddress");
+        /*
+        add_charge_per_mile
+        add_increments_miles
+        charge_per_increment
+        city
+        initial_increment_miles
+        meter_drop
+        wait_time_charge
+        */
+
+        Double add_charge_per_mile = Double.valueOf(customSharedPreference.getString("add_charge_per_mile", "2.00"));
+        Double add_increments_miles = Double.valueOf(customSharedPreference.getString("add_increments_miles", "2.00"));
+        Double charge_per_increment = Double.valueOf(customSharedPreference.getString("charge_per_increment", "2.00"));
+        Double initial_increment_miles = Double.valueOf(customSharedPreference.getString("initial_increment_miles", "2.00"));
+        Double meter_drop = Double.valueOf(customSharedPreference.getString("meter_drop", "2.50"));
+        Double wait_time_charge = Double.valueOf(customSharedPreference.getString("wait_time_charge", "0.50"));
         
-        Double meterDrop = Double.valueOf(customSharedPreference.getString("taxiMeterDropCost", "2.50"));
-        Double taxiUnitDistanceCost = Double.valueOf(customSharedPreference.getString("taxiUnitDistanceCost", "2.00"));
-        Double taxiMinuteWaitCost = Double.valueOf(customSharedPreference.getString("taxiMinuteWaitCost", "0.50"));
-		Double fare = meterDrop; 
-		
-		if (distance > 1) {
-			fare += (distance - 1) * taxiUnitDistanceCost;
+		Double fare = meter_drop; 
+		if (distance > initial_increment_miles) {
+			fare += ((distance - initial_increment_miles) / add_increments_miles) * charge_per_increment;
 		}
-		fare += minutes * taxiMinuteWaitCost; // is this right?
-		Double tip = new Double(fare * 0.15);
+		fare += minutes * wait_time_charge; // is this right?
+		Double tip = fare * 0.15;
 		Double total = tip + fare;
 		
 		try {
@@ -155,10 +167,12 @@ public class Cost extends MapActivity {
 				totals[ENTNUM + i] = "";
 	        }
 	        // set the current address and destination info
-			TextView textView = (TextView) findViewById(R.id.TextView01);
-			textView.setText("Here: " + currentAddress);
+			TextView from = (TextView) findViewById(R.id.fromTextView);
+			from.setText("From: " + fromAddress);
+			TextView to = (TextView) findViewById(R.id.toTextView);
+			to.setText("To: " + toAddress);
 			TextView distTime = (TextView) findViewById(R.id.distTimeTextView);
-			distTime.setText("Info (est.): " + distance.toString() + " miles, " + minutes.toString() + " min(s)");
+			distTime.setText("Info (est.): " + distanceText + ", " + durationText);
 		} catch (JSONException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();

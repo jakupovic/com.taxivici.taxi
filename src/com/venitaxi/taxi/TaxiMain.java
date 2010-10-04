@@ -8,6 +8,8 @@ import java.util.Locale;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -50,7 +52,8 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 	MapController mapController;
 	GeoPoint currentLocation;
 	Address currentAddress = null;
-	String currentAddressString = null;
+	String currentAddressString = "";
+	String destinationAddressString = "";
 	TaxiItemizedOverlay itemizedoverlay;
 	public boolean CheckboxPreference;
     public static String updateNow;
@@ -119,11 +122,12 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// If the event is a key-down event on the "enter" button
 				if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) { 
-					String destinationAddress = edittext.getText().toString();
-					overlayRouteInformationFromAddress(destinationAddress);
 					// hide the keyboard
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+					
+					destinationAddressString = edittext.getText().toString();
+					goToDestinationAddress(destinationAddressString);
 					return true;
 				}
 				return false;
@@ -144,41 +148,6 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 
 	}
 	
-	public void overlayRouteInformationFromAddress(String destinationAddress) {
-		try {
-			List<Address> addresses = geoCoder.getFromLocationName(destinationAddress, 5);
-			if (addresses.size() > 0) {
-				GeoPoint destination = new GeoPoint((int) (addresses.get(0)
-						.getLatitude() * 1E6), (int) (addresses
-								.get(0).getLongitude() * 1E6));
-
-				/* add the marker for destination */
-				OverlayItem overlayitem = new OverlayItem(destination, "Destination", "Hi there.");
-				itemizedoverlay.addOverlay(overlayitem);
-				/* add the marker for current location */
-				/*
-				MyLocation myLocation = new MyLocation();
-				myLocation.getLocation(this, locationResult);
-				*/
-				OverlayItem currentLocationItem = new OverlayItem(currentLocation, "Current Location", "Click me");
-				itemizedoverlay.addOverlay(currentLocationItem);
-
-				mapView.invalidate();
-				// draw the path between current location and destination
-				setDirections(currentLocation, destination);
-				mapController.animateTo(destination);
-			} else {
-				Toast.makeText(
-						TaxiMain.this,
-						"address: '" + destinationAddress
-						+ "' not found, please try again and maybe add city/state?",
-						Toast.LENGTH_SHORT).show();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void setDirections(GeoPoint start, GeoPoint end) {
 		DrivingDirections.Mode mode = Mode.DRIVING; // or Mode.WALKING
 		DrivingDirections directions = DrivingDirectionsFactory.createDrivingDirections();
@@ -196,32 +165,16 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		return false;
 	}
 
-	@Override
-	public void onDirectionsAvailable(Route route, Mode mode) {
-		/* this should draw the route */
-		itemizedoverlay.route = route;
-		itemizedoverlay.mode = mode;
-		mapController.setZoom(14);
-		mapView.invalidate();
+	public void	showCostScreen(String from, String to, Double distanceValue, String distanceText, Double durationValue, String durationText) {
 		try {
-			Double distance = Double.parseDouble(route.getTotalDistance().split(" ")[0]);
-			String unitDistance = route.getTotalDistance().split(" ")[3]; // time in minutes
-			Double minutes = Double.parseDouble(route.getTotalDistance().split(" ")[3]); // time in minutes
-			String unitTime = route.getTotalDistance().split(" ")[4]; // time in minutes
-			unitTime = unitTime.substring(0, unitTime.length() - 1);
-			if(unitTime.equals("hours")) {
-				minutes = minutes * 60.0;
-			}
-			/* FIXME: need to check what the returned values are if not 'mins' or 'miles' convert */
-
 			Intent myIntent = new Intent();
-			
 			//Toast.makeText(TaxiMain.this, "sending: " + currentAddressString , Toast.LENGTH_SHORT).show();
-			myIntent.putExtra("currentAddress", currentAddressString);
-			myIntent.putExtra("distance", distance);
-			myIntent.putExtra("minutes", minutes);
-			myIntent.putExtra("unitDistance", unitDistance);
-			myIntent.putExtra("unitTime", unitTime);
+			myIntent.putExtra("fromAddress", currentAddressString);
+			myIntent.putExtra("toAddress", destinationAddressString);
+			myIntent.putExtra("distanceValue", distanceValue);
+			myIntent.putExtra("distanceText", distanceText);
+			myIntent.putExtra("durationValue", durationValue);
+			myIntent.putExtra("durationText", durationText);
 			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Cost");
 			myIntent.setPackage("com.venitaxi.taxi");
 			/* show the cost screen */
@@ -229,6 +182,15 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		} catch(Exception e) {
 
 		}
+		
+	}
+	@Override
+	public void onDirectionsAvailable(Route route, Mode mode) {
+		/* this should draw the route */
+		itemizedoverlay.route = route;
+		itemizedoverlay.mode = mode;
+		mapController.setZoom(14);
+		mapView.invalidate();
 	}
 
 	@Override
@@ -244,35 +206,81 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		inflater.inflate(R.menu.taxi_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+   public GeoPoint geoCodeAddress(String address) {
+		List<Address> addresses;
+		try {
+			//addresses = geoCoder.getFromLocationName( homeAddress, 5);
+			Double curLatitude = currentLocation.getLatitudeE6()/1E6;
+			Double curLongitude = currentLocation.getLongitudeE6()/1E6;
+			addresses = geoCoder.getFromLocationName( address, 5, curLatitude + 2.0, curLongitude + 2.0, curLatitude - 2.0, curLongitude - 2.0);
+			if (addresses.size() > 0) {
+				GeoPoint p = new GeoPoint((int) (addresses.get(0)
+						.getLatitude() * 1E6), (int) (addresses
+						.get(0).getLongitude() * 1E6));
+				return p;
+			}
+		} catch (Exception e) {
+			//FIXME: have sensible error catching here
+		}
+		return null;
+   }
 
+   public void getRouteInfo(GeoPoint start, GeoPoint destination) {
+		
+		Double curLatitude = start.getLatitudeE6()/1E6;
+		Double curLongitude = start.getLongitudeE6()/1E6;
+		Double dstLatitude = destination.getLatitudeE6()/1E6;
+		Double dstLongitude = destination.getLongitudeE6()/1E6;
+		
+		String url = "http://maps.google.com/maps/api/directions/json?&mode=driving&sensor=false" +
+		"&origin=" + curLatitude + "," + curLongitude + 
+		"&destination=" + dstLatitude + "," + dstLongitude;
+		HttpRetriever hr = new HttpRetriever();
+		String response = hr.retrieve(url);
+		try {
+			JSONObject routeData = Cost.getJSONObjectFromString(response);
+			//routes/#0/legs/#0/distance/value
+			JSONObject routes = (JSONObject) routeData.getJSONArray("routes").get(0);
+			JSONObject legs = (JSONObject) routes.getJSONArray("legs").get(0);
+		    /* distance is in meters*/	
+			Double distanceValue = legs.getJSONObject("distance").getDouble("value");
+			String distanceText = legs.getJSONObject("distance").getString("text");
+			
+			/* duration is in seconds */
+			Double durationValue = legs.getJSONObject("duration").getDouble("value");
+			String durationText = legs.getJSONObject("duration").getString("text");
+			
+			showCostScreen(currentAddressString, destinationAddressString, distanceValue, distanceText, durationValue, durationText);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+   
+   }
+   public void goToDestinationAddress(String address) {
+		GeoPoint dstPoint = geoCodeAddress(address);
+		getRouteInfo(currentLocation, dstPoint);
+		//System.out.println(response);
+		if(dstPoint != null) {
+			OverlayItem overlayitem = new OverlayItem(dstPoint,"Hola, Mundo!", "I'm in Mexico City!");
+			itemizedoverlay.addOverlay(overlayitem);
+			setDirections(currentLocation, dstPoint);
+			mapView.invalidate();
+		} else {
+			Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, is the GPS on?", Toast.LENGTH_SHORT).show();
+		} 
+	   
+   }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		String title = item.getTitle().toString();
-		if(title.equals("go home")) {
+		//FIXME: what happens if there is no current location
+		if(title.equals("go home") && currentLocation != null) {
             homeAddress = customSharedPreference.getString("homeAddress", null);
-            GeoPoint p = null;
             if(homeAddress != null) {
-				List<Address> addresses;
-				try {
-					addresses = geoCoder.getFromLocationName( homeAddress, 5);
-					if (addresses.size() > 0) {
-						p = new GeoPoint((int) (addresses.get(0)
-								.getLatitude() * 1E6), (int) (addresses
-								.get(0).getLongitude() * 1E6));
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-					Toast.makeText(TaxiMain.this, "cannot find: " + homeAddress + ", try being more specific, add city/state?", Toast.LENGTH_SHORT).show();
-				} 
+            	destinationAddressString = homeAddress;
+            	goToDestinationAddress(destinationAddressString);
             }
-			if(p != null && currentLocation != null) {
-				OverlayItem overlayitem = new OverlayItem(p,"Hola, Mundo!", "I'm in Mexico City!");
-				itemizedoverlay.addOverlay(overlayitem);
-				setDirections(currentLocation, p);
-				mapView.invalidate();
-			} else {
-				Toast.makeText(TaxiMain.this, "cannot resolve coordinates for home, is the GPS on?", Toast.LENGTH_SHORT).show();
-			}
 		} else if(title.equals("preferences")) { 
 			Intent myIntent = new Intent();
 			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
@@ -292,6 +300,10 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		}
    return super.onOptionsItemSelected(item);
 	}
+	protected void performReverseGeocodingInBackground() {
+		//showCurrentLocation();
+		new ReverseGeocodeLookupTask().execute((Void[])null);
+	}
 	public void updateLocation() {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
             String userName = customSharedPreference.getString("userName", null);
@@ -301,9 +313,9 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			String timeStamp = Long.toString(Calendar.getInstance().getTimeInMillis()/1000);
 			nameValuePairs.add(new BasicNameValuePair("timestamp", timeStamp));  
 			int responseCode = locationUpdater.updateLocation(currentLocation, nameValuePairs);
-			Toast.makeText(TaxiMain.this, "update response code: " + responseCode + ", server: " + locationUpdater.updateServer, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(TaxiMain.this, "update response code: " + responseCode + ", server: " + locationUpdater.updateServer, Toast.LENGTH_SHORT).show();
 	}
-public class ReverseGeocodeLookupTask extends AsyncTask <Void, Void, GeoPoint> {
+public class ReverseGeocodeLookupTask extends AsyncTask <Void, Void, GeoCodeResult> {
 		
 		private ProgressDialog progressDialog;
 
@@ -318,14 +330,17 @@ public class ReverseGeocodeLookupTask extends AsyncTask <Void, Void, GeoPoint> {
 		}
 
 		@Override
-		protected GeoPoint doInBackground(Void... params) {
-			return new TaxiGeoCoder().reverseGeoCode("seattle, wa", TaxiMain.this);
+		protected GeoCodeResult doInBackground(Void... params) {
+			return new TaxiGeoCoder().reverseGeoCode(currentLocation.getLatitudeE6() / 1E6, currentLocation.getLongitudeE6() / 1E6);
 		}
 
 		@Override
-		protected void onPostExecute(GeoPoint result) {
+		protected void onPostExecute(GeoCodeResult result) {
 			this.progressDialog.cancel();
-			Toast.makeText(TaxiMain.this, result.toString(), Toast.LENGTH_LONG).show();			
+			//Toast.makeText(TaxiMain.this, "done geocoding", Toast.LENGTH_LONG).show();			
+			if(result != null) {
+				//Toast.makeText(TaxiMain.this, "got a result: " + result.toString(), Toast.LENGTH_LONG).show();			
+			}
 		}
 		
 	}

@@ -3,13 +3,19 @@
 	 android:orientation="vertical" android:layout_width="fill_parent"
 	 android:layout_height="fill_parent">
 	
-	<TextView android:id="@+id/TextView01" 
+	<TextView android:id="@+id/fromTextView" 
 	   android:layout_height="wrap_content" 
-	   android:text="Cost details and Taxis to call" 
+	   android:text="From" 
 	   android:textStyle="normal|bold" 
 	   android:gravity="left" 
 	   android:layout_width="fill_parent">
 	</TextView>
+	<TextView android:id="@+id/toTextView" 
+       android:layout_height="wrap_content" 
+       android:text="To" 
+       android:textStyle="normal|bold" 
+       android:gravity="left" 
+       android:layout_width="fill_parent"></TextView>
 	<TextView android:id="@+id/distTimeTextView" 
 	   android:layout_height="wrap_content" 
 	   android:text="Cost details and Taxis to call" 
