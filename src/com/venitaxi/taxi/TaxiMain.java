@@ -176,7 +176,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			myIntent.putExtra("durationValue", durationValue);
 			myIntent.putExtra("durationText", durationText);
 			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Cost");
-			myIntent.setPackage("com.venitaxi.taxi");
+			//myIntent.setPackage("com.venitaxi.taxi");
 			/* show the cost screen */
 			startActivity(myIntent);
 		} catch(Exception e) {
@@ -284,7 +284,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 		} else if(title.equals("preferences")) { 
 			Intent myIntent = new Intent();
 			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
-			myIntent.setPackage("com.venitaxi.taxi");
+			//myIntent.setPackage("com.venitaxi.taxi");
 			startActivity(myIntent);
 		} else if(title.equals("here")) { 
 				if(currentLocation != null) {
