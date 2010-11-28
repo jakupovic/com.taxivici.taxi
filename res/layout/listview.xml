@@ -9,5 +9,5 @@
 	<TextView android:text="@+id/TextView02" android:id="@+id/TextView02"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" 
 		android:gravity="right" style="@style/base.label"
-		android:layout_marginLeft="10px" android:textColor="#0099CC"></TextView>
+		android:layout_marginLeft="10px" android:textColor="#337147"></TextView>
 </LinearLayout>

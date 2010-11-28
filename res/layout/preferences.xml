@@ -6,7 +6,7 @@
                 android:title="City"
                 android:summary="Select City"
                 android:key="listCityLocale"
-                android:defaultValue="Seattle"
+                android:defaultValue="Other"
                 android:entries="@array/listCities"
                 android:entryValues="@array/listCitiesValues" />
 <!--        <EditTextPreference
@@ -74,7 +74,7 @@
                         android:key="taxiMeterDropCost" />
                 <EditTextPreference
                         android:name="Cost per unit distance"
-                        android:summary="Cost per unit distance"
+                        android:summary="Cost of driving 1 mile/km"
                         android:title="Cost per unit distance"
                         android:defaultValue="2.00"
                         android:key="taxiUnitDistanceCost" />
