@@ -1,4 +1,4 @@
-package com.venitaxi.taxi;
+package com.taxiveni.taxifree;
 
 import java.io.IOException;
 import java.util.List;

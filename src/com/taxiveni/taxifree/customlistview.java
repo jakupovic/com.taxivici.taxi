@@ -1,5 +1,7 @@
-package com.venitaxi.taxi;
+package com.taxiveni.taxifree;
 
+
+import com.taxiveni.taxifree.R;
 
 import android.app.Activity;
 import android.os.Bundle;

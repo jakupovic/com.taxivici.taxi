@@ -1,4 +1,4 @@
-package com.venitaxi.taxi;
+package com.taxiveni.taxifree;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +43,8 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.venitaxi.taxi.MyLocation.LocationResult;
+import com.taxiveni.taxifree.MyLocation.LocationResult;
+import com.taxiveni.taxifree.R;
 
 //git test
 public class TaxiMain extends MapActivity implements IDirectionsListener {
@@ -175,7 +176,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
 			myIntent.putExtra("distanceText", distanceText);
 			myIntent.putExtra("durationValue", durationValue);
 			myIntent.putExtra("durationText", durationText);
-			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Cost");
+			myIntent.setClassName("com.taxiveni.taxifree", "com.taxiveni.taxifree.Cost");
 			//myIntent.setPackage("com.venitaxi.taxi");
 			/* show the cost screen */
 			startActivity(myIntent);
@@ -259,9 +260,9 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
    }
    public void goToDestinationAddress(String address) {
 		GeoPoint dstPoint = geoCodeAddress(address);
-		getRouteInfo(currentLocation, dstPoint);
 		//System.out.println(response);
 		if(dstPoint != null) {
+			getRouteInfo(currentLocation, dstPoint);
 			OverlayItem overlayitem = new OverlayItem(dstPoint,"Hola, Mundo!", "I'm in Mexico City!");
 			itemizedoverlay.addOverlay(overlayitem);
 			setDirections(currentLocation, dstPoint);
@@ -283,7 +284,7 @@ public class TaxiMain extends MapActivity implements IDirectionsListener {
             }
 		} else if(title.equals("preferences")) { 
 			Intent myIntent = new Intent();
-			myIntent.setClassName("com.venitaxi.taxi", "com.venitaxi.taxi.Preferences");
+			myIntent.setClassName("com.taxiveni.taxifree", "com.taxiveni.taxifree.Preferences");
 			//myIntent.setPackage("com.venitaxi.taxi");
 			startActivity(myIntent);
 		} else if(title.equals("here")) { 

@@ -1,4 +1,4 @@
-package com.venitaxi.taxi;
+package com.taxiveni.taxifree;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.maps.MapActivity;
+import com.taxiveni.taxifree.R;
 
 public class Cost extends MapActivity {
     JSONArray taxiCompanies = null;

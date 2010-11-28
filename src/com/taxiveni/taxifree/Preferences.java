@@ -1,4 +1,4 @@
-package com.venitaxi.taxi;
+package com.taxiveni.taxifree;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,7 +12,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-import com.venitaxi.taxi.MyLocation.LocationResult;
+import com.taxiveni.taxifree.MyLocation.LocationResult;
+import com.taxiveni.taxifree.R;
  
 
 public class Preferences extends PreferenceActivity {

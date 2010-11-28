@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:myapp="http://schemas.android.com/apk/res/com.taxiveni.taxi"
+    xmlns:myapp="http://schemas.android.com/apk/res/com.taxiveni.taxifree"
     android:id="@+id/mainlayout"
     android:orientation="vertical"
     android:layout_width="fill_parent"
@@ -12,26 +12,38 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
-        android:apiKey="00_yEsf_C069hgQ10knouxA-AlztIiMOgHQyFOg"
+        android:apiKey="00_yEsf_C06_juskvX4JHucjVktPlQs2TAjhQow" 
     />
-    <!-- default key android:apiKey="00_yEsf_C069SuGwrRk-eCFtIuSdoI3SC4XTiVg" 
+    <!-- 
+    //ibm laptop debug
+        android:apiKey="00_yEsf_C06-gx33OPvLxK-qwvWlNAHFfyMDHSA" 
+        android:apiKey="00_yEsf_C069hgQ10knouxA-AlztIiMOgHQyFOg"
+    default key android:apiKey="00_yEsf_C069SuGwrRk-eCFtIuSdoI3SC4XTiVg" 
 		us:seattle key android:apiKey="00_yEsf_C069hgQ10knouxA-AlztIiMOgHQyFOg"
-    -->
  <Button 
  		android:id="@+id/button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@drawable/person" />
+    -->
  <EditText
         android:id="@+id/edittext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Seattle, WA" />
+        android:text="Seattle, WA" 
+        />
+  <LinearLayout android:id="@+id/layout_zoom" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentBottom="true" 
+    android:layout_centerHorizontal="true">
          <com.admob.android.ads.AdView     
            android:id="@+id/ad" 
            android:layout_width="fill_parent" 
-           android:layout_height="wrap_content" />
+           android:layout_height="wrap_content" 
+           />
+  </LinearLayout>         
     <!--       myapp:backgroundColor="#000000"
            myapp:primaryTextColor="#FFFFFF"
            myapp:secondaryTextColor="#CCCCCC" /> -->
